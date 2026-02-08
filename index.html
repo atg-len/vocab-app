@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>介詞學習 App</title>
+    <title>VocabMaster - 英語學習應用</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,1800 +12,1253 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #2D5F4C;
+            --primary-light: #3D7F6C;
+            --accent: #E8A75D;
+            --accent-bright: #F4C471;
+            --bg-main: #FBF8F3;
+            --bg-card: #FFFFFF;
+            --text-dark: #1A2F23;
+            --text-mid: #4A5F58;
+            --text-light: #7A8F88;
+            --border: #E0DDD6;
+            --shadow: rgba(45, 95, 76, 0.08);
+            --shadow-heavy: rgba(45, 95, 76, 0.15);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.6;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
             padding: 20px;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 40px;
+            border-radius: 24px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px var(--shadow-heavy);
+            position: relative;
             overflow: hidden;
         }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 900;
             color: white;
-            padding: 30px;
-            text-align: center;
+            letter-spacing: -0.03em;
+            position: relative;
+            z-index: 1;
         }
 
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
         }
 
-        .mode-tabs {
+        /* Navigation Tabs */
+        .nav-tabs {
             display: flex;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            background: none;
-            font-size: 1.1em;
-        }
-
-        .tab.small-tab {
-            font-size: 0.95em;
-            padding: 15px 10px;
-        }
-
-        .tab:hover {
-            background: #e9ecef;
-        }
-
-        .tab.active {
-            background: white;
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
-        }
-
-        .content {
-            padding: 30px;
-        }
-
-        .mode-content {
-            display: none;
-        }
-
-        .mode-content.active {
-            display: block;
-        }
-
-        .preposition-select {
+            gap: 12px;
             margin-bottom: 30px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0;
         }
 
-        .preposition-select label {
-            display: block;
-            margin-bottom: 10px;
+        .nav-tab {
+            background: none;
+            border: none;
+            padding: 16px 32px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
             font-weight: 600;
-            color: #333;
-        }
-
-        .preposition-select select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1em;
+            color: var(--text-mid);
             cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .input-group {
+        .nav-tab:hover {
+            color: var(--primary);
+            background: rgba(45, 95, 76, 0.05);
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 30px var(--shadow-heavy);
+            transform: translateY(-2px);
+        }
+
+        .card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Forms */
+        .form-group {
             margin-bottom: 20px;
         }
 
-        .input-group label {
+        .form-group label {
             display: block;
-            margin-bottom: 8px;
             font-weight: 600;
-            color: #333;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
         }
 
-        .input-group input,
-        .input-group textarea {
+        input[type="text"],
+        input[type="file"],
+        textarea,
+        select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1em;
-            font-family: inherit;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            background: var(--bg-main);
         }
 
-        .input-group textarea {
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(45, 95, 76, 0.1);
+        }
+
+        textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 120px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
+        /* Buttons */
         .btn {
-            padding: 12px 30px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 8px;
-            font-size: 1em;
+            border-radius: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
+            box-shadow: 0 4px 15px var(--shadow);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .examples-list {
-            margin-top: 30px;
-        }
-
-        .example-item {
-            background: #f8f9fa;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-
-        .example-item h4 {
-            color: #667eea;
-            margin-bottom: 8px;
-        }
-
-        .example-item p {
-            margin: 5px 0;
-            color: #555;
-        }
-
-        .example-item .delete-btn {
-            background: #dc3545;
-            color: white;
-            padding: 5px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
-
-        .example-item .edit-btn {
-            background: #667eea;
-            color: white;
-            padding: 5px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-            margin-right: 10px;
-            font-size: 0.9em;
-        }
-
-        .example-item .edit-btn:hover {
-            background: #5568d3;
-        }
-
-        .example-item .delete-btn:hover {
-            background: #c82333;
-        }
-
-        .edit-mode {
-            background: #e7f3ff;
-            border-left-color: #667eea;
-        }
-
-        .edit-form {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px dashed #667eea;
-        }
-
-        .edit-form input,
-        .edit-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 2px solid #667eea;
-            border-radius: 5px;
-            font-size: 0.95em;
-        }
-
-        .edit-form .btn-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .edit-form .btn-save {
-            background: #28a745;
-            color: white;
-            flex: 1;
-        }
-
-        .edit-form .btn-cancel {
-            background: #6c757d;
-            color: white;
-            flex: 1;
-        }
-
-        .batch-container {
-            margin-top: 20px;
-        }
-
-        .batch-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            background: white;
-        }
-
-        .batch-table th {
-            background: #667eea;
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .batch-table td {
-            padding: 8px;
-            border: 1px solid #e9ecef;
-        }
-
-        .batch-table input,
-        .batch-table textarea,
-        .batch-table select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 0.95em;
-            box-sizing: border-box;
-        }
-
-        .batch-table textarea {
-            min-height: 60px;
-            resize: vertical;
-        }
-
-        .batch-table select {
-            cursor: pointer;
-        }
-
-        .batch-table .remove-row {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-
-        .batch-table .remove-row:hover {
-            background: #c82333;
-        }
-
-        .batch-actions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .batch-info {
-            background: #e7f3ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #667eea;
-        }
-
-        .batch-info h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .batch-info ul {
-            margin-left: 20px;
-            color: #666;
-        }
-
-        .batch-info ul li {
-            margin: 5px 0;
+            box-shadow: 0 6px 25px var(--shadow-heavy);
         }
 
         .btn-secondary {
-            background: #6c757d;
+            background: var(--accent);
             color: white;
         }
 
         .btn-secondary:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
-        }
-
-        .search-container {
-            margin-bottom: 30px;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .search-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .search-box input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1em;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .search-filters {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .search-filters label {
-            font-weight: 600;
-            color: #666;
-        }
-
-        .search-filters select {
-            padding: 8px 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .search-results {
-            margin-top: 20px;
-        }
-
-        .search-results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .search-results-header h3 {
-            color: #333;
-            margin: 0;
-        }
-
-        .search-count {
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .search-item {
-            background: white;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .search-item .prep-badge {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.9em;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .search-item .highlight {
-            background: yellow;
-            font-weight: 600;
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-
-        .search-item-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-item-actions button {
-            padding: 5px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-
-        .btn-view {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-view:hover {
-            background: #5568d3;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-
-        /* 手機版響應式設計 */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            .header h1 {
-                font-size: 1.8em;
-            }
-
-            .header p {
-                font-size: 0.9em;
-            }
-
-            .tab {
-                padding: 15px 8px;
-                font-size: 0.85em;
-            }
-
-            .tab.small-tab {
-                font-size: 0.8em;
-                padding: 12px 5px;
-            }
-
-            .content {
-                padding: 15px;
-            }
-
-            .input-group input,
-            .input-group textarea,
-            .input-group select,
-            .preposition-select select {
-                font-size: 16px; /* 防止 iOS 自動縮放 */
-            }
-
-            .btn {
-                padding: 12px 20px;
-                font-size: 0.95em;
-                width: 100%;
-                margin-bottom: 10px;
-            }
-
-            .action-buttons,
-            .batch-actions {
-                flex-direction: column;
-            }
-
-            .action-buttons .btn,
-            .batch-actions .btn {
-                width: 100%;
-            }
-
-            .stats {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .stat-item {
-                padding: 10px 0;
-            }
-
-            .quiz-sentence {
-                font-size: 1.2em;
-            }
-
-            .preposition-buttons {
-                gap: 8px;
-            }
-
-            .prep-btn {
-                padding: 10px 18px;
-                font-size: 0.95em;
-            }
-
-            .example-item,
-            .wrong-item,
-            .search-item {
-                padding: 12px;
-            }
-
-            .example-item p,
-            .wrong-item p,
-            .search-item p {
-                font-size: 0.95em;
-                word-break: break-word;
-            }
-
-            .edit-form .btn-group {
-                flex-direction: column;
-            }
-
-            .edit-form .btn-save,
-            .edit-form .btn-cancel {
-                width: 100%;
-            }
-
-            /* 批量輸入表格手機版優化 */
-            .batch-table {
-                display: block;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .batch-table thead {
-                display: none;
-            }
-
-            .batch-table tbody {
-                display: block;
-            }
-
-            .batch-table tr {
-                display: block;
-                margin-bottom: 15px;
-                border: 1px solid #e9ecef;
-                border-radius: 8px;
-                padding: 10px;
-                background: white;
-            }
-
-            .batch-table td {
-                display: block;
-                border: none;
-                padding: 8px 0;
-            }
-
-            .batch-table td:before {
-                content: attr(data-label);
-                font-weight: 600;
-                display: block;
-                margin-bottom: 5px;
-                color: #667eea;
-            }
-
-            .batch-table input,
-            .batch-table textarea {
-                font-size: 16px;
-            }
-
-            /* 搜尋功能手機版優化 */
-            .search-box {
-                flex-direction: column;
-            }
-
-            .search-box input {
-                font-size: 16px;
-            }
-
-            .search-filters {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .search-filters select {
-                width: 100%;
-                font-size: 16px;
-            }
-
-            .search-results-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .search-item-actions {
-                flex-direction: column;
-            }
-
-            .search-item-actions button {
-                width: 100%;
-            }
-
-            .batch-info ul {
-                font-size: 0.9em;
-            }
-
-            .mode-indicator {
-                padding: 12px;
-            }
-
-            .mode-indicator h3 {
-                font-size: 1.1em;
-            }
-
-            .mode-indicator p {
-                font-size: 0.9em;
-            }
-        }
-
-        /* 超小螢幕優化 */
-        @media (max-width: 400px) {
-            .header h1 {
-                font-size: 1.5em;
-            }
-
-            .tab.small-tab {
-                font-size: 0.75em;
-                padding: 10px 3px;
-            }
-
-            .quiz-sentence {
-                font-size: 1.1em;
-            }
-
-            .prep-btn {
-                padding: 8px 15px;
-                font-size: 0.9em;
-            }
-        }
-
-        .quiz-card {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .quiz-sentence {
-            font-size: 1.5em;
-            margin-bottom: 30px;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .quiz-sentence .blank {
-            display: inline-block;
-            min-width: 80px;
-            border-bottom: 3px solid #667eea;
-            margin: 0 5px;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .preposition-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .prep-btn {
-            padding: 12px 24px;
-            border: 2px solid #667eea;
-            background: white;
-            color: #667eea;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .prep-btn:hover {
-            background: #667eea;
-            color: white;
+            background: var(--accent-bright);
             transform: translateY(-2px);
         }
 
-        .prep-btn.selected {
-            background: #667eea;
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
             color: white;
-        }
-
-        .feedback {
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-weight: 600;
-        }
-
-        .feedback.correct {
-            background: #d4edda;
-            color: #155724;
-            border: 2px solid #28a745;
-        }
-
-        .feedback.incorrect {
-            background: #f8d7da;
-            color: #721c24;
-            border: 2px solid #dc3545;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-item .number {
-            font-size: 2em;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .stat-item .label {
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .wrong-questions {
-            margin-top: 30px;
-        }
-
-        .wrong-questions h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .wrong-item {
-            background: #fff3cd;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border-left: 4px solid #ffc107;
-            position: relative;
-        }
-
-        .wrong-item .retry-btn {
-            background: #667eea;
-            color: white;
-            padding: 5px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
-
-        .wrong-item .retry-btn:hover {
-            background: #5568d3;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 50px;
-            color: #999;
-        }
-
-        .empty-state svg {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
         }
 
         .btn-danger {
-            background: #dc3545;
+            background: #D64545;
             color: white;
         }
 
         .btn-danger:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+            background: #C13838;
         }
 
-        .btn-warning {
-            background: #ffc107;
-            color: #333;
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
-        .btn-warning:hover {
-            background: #e0a800;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+        /* Category Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
         }
 
-        .mode-indicator {
-            background: #e7f3ff;
-            padding: 15px;
+        .category-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-main) 100%);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-bright) 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .category-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .category-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px var(--shadow-heavy);
+        }
+
+        .category-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .category-card .vocab-count {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Vocab List */
+        .vocab-list {
+            display: grid;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .vocab-item {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .vocab-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .vocab-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
             border-radius: 8px;
+            border: 2px solid var(--border);
+        }
+
+        .vocab-image-placeholder {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--bg-main) 0%, var(--border) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 2rem;
+        }
+
+        .vocab-info {
+            flex: 1;
+        }
+
+        .vocab-word {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .vocab-translation {
+            color: var(--text-mid);
+            font-size: 0.95rem;
+        }
+
+        /* Practice Section */
+        .practice-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #F5F2ED 100%);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 8px 40px var(--shadow-heavy);
+            margin-bottom: 30px;
+        }
+
+        .practice-image-container {
+            margin-bottom: 30px;
+        }
+
+        .practice-image {
+            max-width: 400px;
+            max-height: 300px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px var(--shadow);
+            border: 3px solid white;
+        }
+
+        .practice-word {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 30px 0;
+            letter-spacing: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .practice-word.hidden-mode {
+            letter-spacing: 0.3rem;
+        }
+
+        .practice-word .letter {
+            display: inline-block;
+            margin: 0 4px;
+            transition: all 0.3s ease;
+        }
+
+        .practice-word .letter.hidden {
+            color: transparent;
+            background: var(--accent);
+            border-radius: 8px;
+            padding: 0 12px;
+        }
+
+        .practice-input {
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px 30px;
+            font-size: 1.5rem;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            border: 3px solid var(--primary);
+            border-radius: 16px;
+        }
+
+        .practice-feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .practice-feedback.correct {
+            background: #D4EDDA;
+            color: #155724;
+            border: 2px solid #C3E6CB;
+        }
+
+        .practice-feedback.incorrect {
+            background: #F8D7DA;
+            color: #721C24;
+            border: 2px solid #F5C6CB;
+        }
+
+        .practice-controls {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        /* Import Section */
+        .import-examples {
+            background: var(--bg-main);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-mid);
+        }
+
+        .import-examples h4 {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 47, 35, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.4s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vocab-item {
+                grid-template-columns: 80px 1fr;
+            }
+
+            .vocab-item .btn-group {
+                grid-column: 1 / -1;
+                margin-top: 12px;
+            }
+
+            .practice-word {
+                font-size: 2rem;
+            }
+
+            .nav-tab {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
             margin-bottom: 20px;
-            border-left: 4px solid #667eea;
+            opacity: 0.5;
         }
 
-        .mode-indicator h3 {
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-
-        .mode-indicator p {
-            color: #666;
-            margin: 0;
+        .empty-state h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--text-mid);
+            margin-bottom: 12px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📚 介詞學習 App</h1>
-            <p>掌握英文介詞的最佳工具</p>
+    <div class="app-container">
+        <header>
+            <h1>VocabMaster</h1>
+            <p>你的個人化英語單字學習工具</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('manage')">📚 管理單字</button>
+            <button class="nav-tab" onclick="switchTab('practice')">✏️ 練習</button>
+            <button class="nav-tab" onclick="switchTab('import')">📥 匯入</button>
+            <button class="nav-tab" onclick="switchTab('stats')">📊 統計</button>
+        </nav>
+
+        <!-- Manage Tab -->
+        <div id="manage" class="tab-content active">
+            <div class="card">
+                <h2>➕ 新增類別</h2>
+                <div class="form-group">
+                    <label>類別名稱</label>
+                    <input type="text" id="newCategoryName" placeholder="例如：食物、動物、日常用品">
+                </div>
+                <button class="btn btn-primary" onclick="addCategory()">建立類別</button>
+            </div>
+
+            <div class="card">
+                <h2>📋 我的類別</h2>
+                <div id="categoriesContainer" class="category-grid"></div>
+            </div>
         </div>
 
-        <div class="mode-tabs">
-            <button class="tab small-tab active" onclick="switchMode('input')">📝 單個輸入</button>
-            <button class="tab small-tab" onclick="switchMode('batch')">📊 批量輸入</button>
-            <button class="tab small-tab" onclick="switchMode('search')">🔍 搜尋例句</button>
-            <button class="tab small-tab" onclick="switchMode('practice')">✏️ 練習模式</button>
-        </div>
-
-        <div class="content">
-            <!-- 輸入模式 -->
-            <div id="input-mode" class="mode-content active">
-                <div class="preposition-select">
-                    <label>選擇介詞分類：</label>
-                    <select id="prep-category" onchange="updateExamplesList()">
-                        <option value="in">in</option>
-                        <option value="on">on</option>
-                        <option value="at">at</option>
-                        <option value="by">by</option>
-                        <option value="over">over</option>
-                        <option value="with">with</option>
-                        <option value="for">for</option>
-                        <option value="within">within</option>
-                        <option value="to">to</option>
-                        <option value="of">of</option>
-                        <option value="from">from</option>
-                        <option value="about">about</option>
-                        <option value="into">into</option>
-                        <option value="as">as</option>
-                        <option value="toward">toward</option>
+        <!-- Practice Tab -->
+        <div id="practice" class="tab-content">
+            <div class="card">
+                <h2>🎯 選擇練習設定</h2>
+                <div class="form-group">
+                    <label>選擇類別</label>
+                    <select id="practiceCategory" onchange="startPractice()">
+                        <option value="">-- 選擇類別 --</option>
                     </select>
                 </div>
-
-                <div class="input-group">
-                    <label>例句（用 ___ 表示介詞位置）：</label>
-                    <input type="text" id="example-sentence" placeholder="例如：I live ___ Tokyo">
-                </div>
-
-                <div class="input-group">
-                    <label>解釋：</label>
-                    <textarea id="example-explanation" placeholder="解釋這個介詞在此例句中的用法..."></textarea>
-                </div>
-
-                <button class="btn btn-primary" onclick="addExample()">➕ 新增例句</button>
-
-                <div class="examples-list" id="examples-list">
-                    <h3>已輸入的例句</h3>
-                    <div id="examples-container"></div>
+                
+                <div class="form-group">
+                    <label>練習模式</label>
+                    <select id="practiceMode" onchange="startPractice()">
+                        <option value="hideLetters">遮擋字母模式</option>
+                        <option value="translation">中文翻譯模式</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- 批量輸入模式 -->
-            <div id="batch-mode" class="mode-content">
-                <div class="batch-info">
-                    <h3>📊 批量輸入說明</h3>
-                    <ul>
-                        <li>先選擇介詞，然後批量輸入該介詞的多個例句</li>
-                        <li>每行代表一個例句，包含例句和解釋</li>
-                        <li>例句中請用 <strong>___</strong> 表示介詞位置</li>
-                        <li>點擊「新增一行」可以增加更多例句</li>
-                        <li>儲存後可以切換到其他介詞繼續輸入</li>
-                    </ul>
-                </div>
-
-                <div class="preposition-select">
-                    <label>選擇介詞分類：</label>
-                    <select id="batch-prep-category">
-                        <option value="in">in</option>
-                        <option value="on">on</option>
-                        <option value="at">at</option>
-                        <option value="by">by</option>
-                        <option value="over">over</option>
-                        <option value="with">with</option>
-                        <option value="for">for</option>
-                        <option value="within">within</option>
-                        <option value="to">to</option>
-                        <option value="of">of</option>
-                        <option value="from">from</option>
-                        <option value="about">about</option>
-                        <option value="into">into</option>
-                        <option value="as">as</option>
-                        <option value="toward">toward</option>
-                    </select>
-                </div>
-
-                <div class="batch-actions">
-                    <button class="btn btn-secondary" onclick="addBatchRow()">➕ 新增一行</button>
-                    <button class="btn btn-primary" onclick="saveBatchExamples()">💾 儲存全部</button>
-                    <button class="btn btn-danger" onclick="clearBatchTable()">🗑️ 清空表格</button>
-                </div>
-
-                <div class="batch-container">
-                    <table class="batch-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 45%;">例句（用 ___ 表示介詞）</th>
-                                <th style="width: 45%;">解釋</th>
-                                <th style="width: 80px;">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="batch-table-body">
-                            <!-- 批量輸入的行會動態生成 -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 搜尋模式 -->
-            <div id="search-mode" class="mode-content">
-                <div class="search-container">
-                    <div class="search-box">
-                        <input type="text" id="search-input" placeholder="搜尋例句或解釋..." onkeyup="performSearch()">
-                        <button class="btn btn-primary" onclick="performSearch()">🔍 搜尋</button>
+            <div id="practiceArea" style="display: none;">
+                <div class="practice-card">
+                    <div id="practiceImageContainer" class="practice-image-container" style="display: none;">
+                        <img id="practiceImage" class="practice-image" alt="">
                     </div>
                     
-                    <div class="search-filters">
-                        <label>篩選介詞：</label>
-                        <select id="search-prep-filter" onchange="performSearch()">
-                            <option value="all">全部</option>
-                            <option value="in">in</option>
-                            <option value="on">on</option>
-                            <option value="at">at</option>
-                            <option value="by">by</option>
-                            <option value="over">over</option>
-                            <option value="with">with</option>
-                            <option value="for">for</option>
-                            <option value="within">within</option>
-                            <option value="to">to</option>
-                            <option value="of">of</option>
-                            <option value="from">from</option>
-                            <option value="about">about</option>
-                            <option value="into">into</option>
-                            <option value="as">as</option>
-                            <option value="toward">toward</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="search-results">
-                    <div class="search-results-header">
-                        <h3>搜尋結果</h3>
-                        <span class="search-count" id="search-count">共 0 個結果</span>
-                    </div>
-                    <div id="search-results-container">
-                        <div class="no-results">
-                            <p style="font-size: 1.2em;">🔍</p>
-                            <p>輸入關鍵字開始搜尋</p>
-                        </div>
+                    <div id="practiceTranslation" class="practice-word" style="display: none; color: var(--text-dark); font-size: 2rem;"></div>
+                    
+                    <div id="practiceWord" class="practice-word"></div>
+                    
+                    <input type="text" id="practiceInput" class="practice-input" placeholder="輸入完整單字..." onkeyup="checkAnswer(event)">
+                    
+                    <div id="practiceFeedback" class="practice-feedback" style="display: none;"></div>
+                    
+                    <div class="practice-controls">
+                        <button class="btn btn-secondary" onclick="showAnswer()">顯示答案</button>
+                        <button class="btn btn-primary" onclick="nextWord()">下一個</button>
+                        <button class="btn btn-outline" id="regenerateBtn" onclick="regeneratePattern()">重新遮擋</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- 練習模式 -->
-            <div id="practice-mode" class="mode-content">
-                <div id="mode-indicator" class="mode-indicator">
-                    <h3>🎯 一般練習模式</h3>
-                    <p>從所有已輸入的例句中隨機出題</p>
+        <!-- Import Tab -->
+        <div id="import" class="tab-content">
+            <div class="card">
+                <h2>📥 批量匯入單字</h2>
+                
+                <div class="form-group">
+                    <label>選擇類別</label>
+                    <select id="importCategory">
+                        <option value="">-- 選擇類別 --</option>
+                    </select>
                 </div>
 
-                <div class="action-buttons">
-                    <button class="btn btn-warning" onclick="togglePracticeMode()">🔄 切換錯題練習</button>
-                    <button class="btn btn-danger" onclick="resetStats()">🗑️ 清除成績</button>
+                <div class="form-group">
+                    <label>匯入格式 (每行一個單字，用逗號分隔)</label>
+                    <textarea id="importText" placeholder="apple,蘋果
+banana,香蕉
+cat,貓"></textarea>
                 </div>
 
-                <div id="quiz-container">
-                    <!-- 題目會動態生成 -->
+                <div class="import-examples">
+                    <h4>📝 支援格式說明：</h4>
+                    <p><strong>單行格式：</strong> 英文,中文</p>
+                    <p><strong>範例：</strong></p>
+                    <pre>apple,蘋果
+banana,香蕉
+orange,橙子</pre>
                 </div>
 
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="number" id="correct-count">0</div>
-                        <div class="label">答對</div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="importVocab()">匯入單字</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('csvFile').click()">從 CSV 匯入</button>
+                    <input type="file" id="csvFile" accept=".csv,.txt" style="display: none;" onchange="handleFileImport(event)">
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Tab -->
+        <div id="stats" class="tab-content">
+            <div class="card">
+                <h2>📊 學習統計</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCategories">0</div>
+                        <div class="stat-label">總類別數</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="number" id="incorrect-count">0</div>
-                        <div class="label">答錯</div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalVocab">0</div>
+                        <div class="stat-label">總單字數</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="number" id="accuracy">0%</div>
-                        <div class="label">正確率</div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalPracticed">0</div>
+                        <div class="stat-label">練習次數</div>
                     </div>
-                </div>
-
-                <div class="wrong-questions">
-                    <h3>❌ 錯誤記錄</h3>
-                    <div id="wrong-list"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // 數據儲存
-        let data = {
-            examples: {},
-            stats: {
-                correct: 0,
-                incorrect: 0,
-                wrongQuestions: []
-            }
-        };
-
-        // 所有介詞列表
-        const allPrepositions = ['in', 'on', 'at', 'by', 'over', 'with', 'for', 'within', 'to', 'of', 'from', 'about', 'into', 'as', 'toward'];
-
-        // 當前練習題
-        let currentQuestion = null;
-        let selectedAnswer = null;
-
-        // 練習模式狀態
-        let isWrongQuestionMode = false;
-
-        // 正在編輯的例句ID
-        let editingId = null;
-
-        // 從 localStorage 載入數據
-        function loadData() {
-            const saved = localStorage.getItem('prepositionAppData');
-            if (saved) {
-                data = JSON.parse(saved);
-            }
-            // 初始化所有介詞分類
-            allPrepositions.forEach(prep => {
-                if (!data.examples[prep]) {
-                    data.examples[prep] = [];
-                }
-            });
-        }
-
-        // 儲存數據到 localStorage
-        function saveData() {
-            localStorage.setItem('prepositionAppData', JSON.stringify(data));
-        }
-
-        // 切換模式
-        function switchMode(mode) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.mode-content').forEach(content => content.classList.remove('active'));
+    <!-- Edit Vocab Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 24px;">編輯單字</h2>
             
-            if (mode === 'input') {
-                document.querySelectorAll('.tab')[0].classList.add('active');
-                document.getElementById('input-mode').classList.add('active');
-                updateExamplesList();
-            } else if (mode === 'batch') {
-                document.querySelectorAll('.tab')[1].classList.add('active');
-                document.getElementById('batch-mode').classList.add('active');
-                initBatchTable();
-            } else if (mode === 'search') {
-                document.querySelectorAll('.tab')[2].classList.add('active');
-                document.getElementById('search-mode').classList.add('active');
-                performSearch();
-            } else {
-                document.querySelectorAll('.tab')[3].classList.add('active');
-                document.getElementById('practice-mode').classList.add('active');
-                startQuiz();
-            }
-        }
+            <div class="form-group">
+                <label>英文單字</label>
+                <input type="text" id="editWord">
+            </div>
 
-        // 新增例句
-        function addExample() {
-            const category = document.getElementById('prep-category').value;
-            const sentence = document.getElementById('example-sentence').value.trim();
-            const explanation = document.getElementById('example-explanation').value.trim();
+            <div class="form-group">
+                <label>中文翻譯</label>
+                <input type="text" id="editTranslation">
+            </div>
 
-            if (!sentence || !explanation) {
-                alert('請填寫例句和解釋！');
-                return;
-            }
+            <div class="form-group">
+                <label>圖片 (選填)</label>
+                <input type="file" id="editImage" accept="image/*" onchange="previewEditImage(event)">
+                <div id="editImagePreview" style="margin-top: 12px;"></div>
+            </div>
 
-            if (!sentence.includes('___')) {
-                alert('例句中請用 ___ 表示介詞位置！');
-                return;
-            }
+            <div class="btn-group" style="margin-top: 24px;">
+                <button class="btn btn-primary" onclick="saveEdit()">儲存</button>
+                <button class="btn btn-outline" onclick="closeEditModal()">取消</button>
+            </div>
+        </div>
+    </div>
 
-            data.examples[category].push({
-                sentence: sentence,
-                explanation: explanation,
-                preposition: category,
-                id: Date.now()
-            });
-
-            saveData();
+    <!-- Category Detail Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <h2 id="categoryModalTitle" style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 24px;"></h2>
             
-            // 清空輸入框
-            document.getElementById('example-sentence').value = '';
-            document.getElementById('example-explanation').value = '';
-            
-            updateExamplesList();
-            alert('✅ 例句新增成功！');
-        }
-
-        // 更新例句列表
-        function updateExamplesList() {
-            const category = document.getElementById('prep-category').value;
-            const container = document.getElementById('examples-container');
-            const examples = data.examples[category] || [];
-
-            if (examples.length === 0) {
-                container.innerHTML = '<div class="empty-state">📝 還沒有例句，開始新增吧！</div>';
-                return;
-            }
-
-            container.innerHTML = examples.map(ex => {
-                const isEditing = editingId === ex.id;
-                return `
-                    <div class="example-item ${isEditing ? 'edit-mode' : ''}">
-                        <h4>${ex.preposition.toUpperCase()}</h4>
-                        ${isEditing ? `
-                            <div class="edit-form">
-                                <input type="text" id="edit-sentence-${ex.id}" value="${ex.sentence}" placeholder="例句（用 ___ 表示介詞位置）">
-                                <textarea id="edit-explanation-${ex.id}" placeholder="解釋">${ex.explanation}</textarea>
-                                <div class="btn-group">
-                                    <button class="btn btn-save" onclick="saveEdit(${ex.id})">💾 儲存</button>
-                                    <button class="btn btn-cancel" onclick="cancelEdit()">✖️ 取消</button>
-                                </div>
-                            </div>
-                        ` : `
-                            <p><strong>例句：</strong>${ex.sentence.replace('___', `<span style="color: #667eea; font-weight: 700;">${ex.preposition}</span>`)}</p>
-                            <p><strong>解釋：</strong>${ex.explanation}</p>
-                            <button class="edit-btn" onclick="startEdit(${ex.id})">✏️ 編輯</button>
-                            <button class="delete-btn" onclick="deleteExample(${ex.id})">🗑️ 刪除</button>
-                        `}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // 刪除例句
-        function deleteExample(id) {
-            if (!confirm('確定要刪除這個例句嗎？')) return;
-
-            for (let prep in data.examples) {
-                data.examples[prep] = data.examples[prep].filter(ex => ex.id !== id);
-            }
-            saveData();
-            updateExamplesList();
-        }
-
-        // 開始編輯例句
-        function startEdit(id) {
-            editingId = id;
-            updateExamplesList();
-        }
-
-        // 取消編輯
-        function cancelEdit() {
-            editingId = null;
-            updateExamplesList();
-        }
-
-        // 儲存編輯
-        function saveEdit(id) {
-            const category = document.getElementById('prep-category').value;
-            const sentence = document.getElementById(`edit-sentence-${id}`).value.trim();
-            const explanation = document.getElementById(`edit-explanation-${id}`).value.trim();
-
-            if (!sentence || !explanation) {
-                alert('請填寫例句和解釋！');
-                return;
-            }
-
-            if (!sentence.includes('___')) {
-                alert('例句中請用 ___ 表示介詞位置！');
-                return;
-            }
-
-            // 找到並更新例句
-            for (let prep in data.examples) {
-                const exampleIndex = data.examples[prep].findIndex(ex => ex.id === id);
-                if (exampleIndex !== -1) {
-                    data.examples[prep][exampleIndex].sentence = sentence;
-                    data.examples[prep][exampleIndex].explanation = explanation;
-                    break;
-                }
-            }
-
-            saveData();
-            editingId = null;
-            updateExamplesList();
-            alert('✅ 例句更新成功！');
-        }
-
-        // 開始測驗
-        function startQuiz() {
-            let allExamples = [];
-
-            // 根據模式選擇題目來源
-            if (isWrongQuestionMode) {
-                // 錯題練習模式
-                if (data.stats.wrongQuestions.length === 0) {
-                    document.getElementById('quiz-container').innerHTML = `
-                        <div class="empty-state">
-                            <p style="font-size: 1.2em;">🎉 太棒了！沒有錯題記錄</p>
-                            <p>點擊上方按鈕切換回一般練習模式</p>
-                        </div>
-                    `;
-                    return;
-                }
-                allExamples = data.stats.wrongQuestions.slice();
-            } else {
-                // 一般練習模式
-                for (let prep in data.examples) {
-                    allExamples = allExamples.concat(data.examples[prep]);
-                }
-
-                if (allExamples.length === 0) {
-                    document.getElementById('quiz-container').innerHTML = `
-                        <div class="empty-state">
-                            <p style="font-size: 1.2em;">還沒有例句可以練習</p>
-                            <p>請先到輸入模式新增例句！</p>
-                        </div>
-                    `;
-                    return;
-                }
-            }
-
-            // 隨機選一題
-            currentQuestion = allExamples[Math.floor(Math.random() * allExamples.length)];
-            selectedAnswer = null;
-
-            // 生成選項（正確答案 + 其他隨機介詞）
-            let options = [currentQuestion.preposition];
-            let otherPreps = allPrepositions.filter(p => p !== currentQuestion.preposition);
-            
-            // 隨機加入 3-4 個其他選項
-            while (options.length < Math.min(5, allPrepositions.length)) {
-                const randomPrep = otherPreps[Math.floor(Math.random() * otherPreps.length)];
-                if (!options.includes(randomPrep)) {
-                    options.push(randomPrep);
-                }
-            }
-
-            // 打亂選項
-            options.sort(() => Math.random() - 0.5);
-
-            document.getElementById('quiz-container').innerHTML = `
-                <div class="quiz-card">
-                    <div class="quiz-sentence">
-                        ${currentQuestion.sentence.replace('___', '<span class="blank">?</span>')}
-                    </div>
-                    <div class="preposition-buttons">
-                        ${options.map(opt => `
-                            <button class="prep-btn" onclick="selectAnswer('${opt}')">${opt}</button>
-                        `).join('')}
-                    </div>
-                    <button class="btn btn-success" onclick="checkAnswer()" style="margin-top: 20px;">✓ 確認答案</button>
-                    <div id="feedback"></div>
+            <div class="card" style="box-shadow: none; border: 2px solid var(--border);">
+                <h3 style="color: var(--primary); margin-bottom: 16px;">➕ 新增單字</h3>
+                
+                <div class="form-group">
+                    <label>英文單字</label>
+                    <input type="text" id="newWord" placeholder="例如：apple">
                 </div>
-            `;
 
+                <div class="form-group">
+                    <label>中文翻譯</label>
+                    <input type="text" id="newTranslation" placeholder="例如：蘋果">
+                </div>
+
+                <div class="form-group">
+                    <label>圖片 (選填)</label>
+                    <input type="file" id="newImage" accept="image/*" onchange="previewImage(event)">
+                    <div id="imagePreview" style="margin-top: 12px;"></div>
+                </div>
+
+                <button class="btn btn-primary" onclick="addVocabToCategory()">新增單字</button>
+            </div>
+
+            <div id="vocabListContainer" class="vocab-list" style="margin-top: 30px;"></div>
+
+            <div style="margin-top: 24px;">
+                <button class="btn btn-outline" onclick="closeCategoryModal()">關閉</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let categories = JSON.parse(localStorage.getItem('vocabCategories')) || [];
+        let currentCategory = null;
+        let currentEditIndex = null;
+        let currentPracticeCategory = null;
+        let currentPracticeIndex = 0;
+        let currentPracticeWords = [];
+        let practiceStats = JSON.parse(localStorage.getItem('practiceStats')) || { totalPracticed: 0 };
+        let currentImagePreview = null;
+
+        // Initialize
+        function init() {
+            renderCategories();
             updateStats();
-            updateWrongList();
+            updatePracticeCategoryList();
+            updateImportCategoryList();
         }
 
-        // 選擇答案
-        function selectAnswer(answer) {
-            selectedAnswer = answer;
-            document.querySelectorAll('.prep-btn').forEach(btn => {
-                btn.classList.remove('selected');
-                if (btn.textContent === answer) {
-                    btn.classList.add('selected');
-                }
-            });
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'stats') {
+                updateStats();
+            }
         }
 
-        // 檢查答案
-        function checkAnswer() {
-            if (!selectedAnswer) {
-                alert('請先選擇一個答案！');
+        // Category management
+        function addCategory() {
+            const name = document.getElementById('newCategoryName').value.trim();
+            if (!name) {
+                alert('請輸入類別名稱');
                 return;
             }
 
-            const isCorrect = selectedAnswer === currentQuestion.preposition;
-            const feedbackDiv = document.getElementById('feedback');
-
-            if (isCorrect) {
-                data.stats.correct++;
-                feedbackDiv.className = 'feedback correct';
-                feedbackDiv.innerHTML = `
-                    <p style="font-size: 1.2em; margin-bottom: 10px;">✅ 答對了！</p>
-                    <p><strong>解釋：</strong>${currentQuestion.explanation}</p>
-                `;
-
-                // 如果是錯題練習模式且答對，從錯題列表中移除
-                if (isWrongQuestionMode) {
-                    data.stats.wrongQuestions = data.stats.wrongQuestions.filter(q => 
-                        !(q.sentence === currentQuestion.sentence && 
-                          q.preposition === currentQuestion.preposition)
-                    );
-                }
-            } else {
-                data.stats.incorrect++;
-                
-                // 只在一般模式下記錄新錯題
-                if (!isWrongQuestionMode) {
-                    // 檢查是否已經存在相同的錯題
-                    const exists = data.stats.wrongQuestions.some(q => 
-                        q.sentence === currentQuestion.sentence && 
-                        q.preposition === currentQuestion.preposition
-                    );
-                    
-                    if (!exists) {
-                        data.stats.wrongQuestions.push({
-                            ...currentQuestion,
-                            yourAnswer: selectedAnswer,
-                            timestamp: new Date().toLocaleString()
-                        });
-                    }
-                }
-                
-                feedbackDiv.className = 'feedback incorrect';
-                feedbackDiv.innerHTML = `
-                    <p style="font-size: 1.2em; margin-bottom: 10px;">❌ 答錯了！</p>
-                    <p><strong>正確答案：</strong>${currentQuestion.preposition}</p>
-                    <p><strong>你的答案：</strong>${selectedAnswer}</p>
-                    <p><strong>解釋：</strong>${currentQuestion.explanation}</p>
-                `;
-            }
+            categories.push({
+                id: Date.now(),
+                name: name,
+                vocabs: []
+            });
 
             saveData();
-
-            setTimeout(() => {
-                startQuiz();
-            }, 3000);
+            document.getElementById('newCategoryName').value = '';
+            renderCategories();
+            updatePracticeCategoryList();
+            updateImportCategoryList();
         }
 
-        // 更新統計
-        function updateStats() {
-            const total = data.stats.correct + data.stats.incorrect;
-            const accuracy = total > 0 ? Math.round((data.stats.correct / total) * 100) : 0;
-
-            document.getElementById('correct-count').textContent = data.stats.correct;
-            document.getElementById('incorrect-count').textContent = data.stats.incorrect;
-            document.getElementById('accuracy').textContent = accuracy + '%';
-        }
-
-        // 更新錯誤列表
-        function updateWrongList() {
-            const container = document.getElementById('wrong-list');
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
             
-            if (data.stats.wrongQuestions.length === 0) {
-                container.innerHTML = '<div class="empty-state">🎉 目前沒有錯誤記錄！</div>';
+            if (categories.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-state-icon">📚</div>
+                        <h3>還沒有任何類別</h3>
+                        <p>建立你的第一個單字類別開始學習吧！</p>
+                    </div>
+                `;
                 return;
             }
 
-            container.innerHTML = data.stats.wrongQuestions.slice(-10).reverse().map((q, index) => `
-                <div class="wrong-item">
-                    <p><strong>題目：</strong>${q.sentence}</p>
-                    <p><strong>正確答案：</strong><span style="color: #28a745; font-weight: 700;">${q.preposition}</span></p>
-                    <p><strong>你的答案：</strong><span style="color: #dc3545; font-weight: 700;">${q.yourAnswer}</span></p>
-                    <p style="font-size: 0.9em; color: #666; margin-top: 5px;">${q.timestamp}</p>
-                    <button class="retry-btn" onclick="practiceThisQuestion(${data.stats.wrongQuestions.length - 1 - index})">
-                        🔄 練習這題
-                    </button>
+            container.innerHTML = categories.map(cat => `
+                <div class="category-card" onclick="openCategory(${cat.id})">
+                    <h3>${cat.name}</h3>
+                    <p class="vocab-count">${cat.vocabs.length} 個單字</p>
                 </div>
             `).join('');
         }
 
-        // 練習特定錯題
-        function practiceThisQuestion(index) {
-            const reversedIndex = data.stats.wrongQuestions.length - 1 - index;
-            currentQuestion = data.stats.wrongQuestions[reversedIndex];
-            selectedAnswer = null;
-
-            // 生成選項
-            let options = [currentQuestion.preposition];
-            let otherPreps = allPrepositions.filter(p => p !== currentQuestion.preposition);
-            
-            while (options.length < Math.min(5, allPrepositions.length)) {
-                const randomPrep = otherPreps[Math.floor(Math.random() * otherPreps.length)];
-                if (!options.includes(randomPrep)) {
-                    options.push(randomPrep);
-                }
-            }
-            options.sort(() => Math.random() - 0.5);
-
-            document.getElementById('quiz-container').innerHTML = `
-                <div class="quiz-card">
-                    <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                        <strong>📝 正在練習錯題</strong>
-                    </div>
-                    <div class="quiz-sentence">
-                        ${currentQuestion.sentence.replace('___', '<span class="blank">?</span>')}
-                    </div>
-                    <div class="preposition-buttons">
-                        ${options.map(opt => `
-                            <button class="prep-btn" onclick="selectAnswer('${opt}')">${opt}</button>
-                        `).join('')}
-                    </div>
-                    <button class="btn btn-success" onclick="checkAnswer()" style="margin-top: 20px;">✓ 確認答案</button>
-                    <div id="feedback"></div>
-                </div>
-            `;
-
-            // 滾動到題目區域
-            document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' });
+        function openCategory(categoryId) {
+            currentCategory = categories.find(cat => cat.id === categoryId);
+            document.getElementById('categoryModalTitle').textContent = currentCategory.name;
+            renderVocabList();
+            document.getElementById('categoryModal').classList.add('active');
         }
 
-        // 切換練習模式
-        function togglePracticeMode() {
-            isWrongQuestionMode = !isWrongQuestionMode;
-            
-            const indicator = document.getElementById('mode-indicator');
-            if (isWrongQuestionMode) {
-                indicator.innerHTML = `
-                    <h3>❌ 錯題練習模式</h3>
-                    <p>專注練習之前答錯的題目，答對後會自動從錯題本移除</p>
-                `;
-                indicator.style.borderLeftColor = '#ffc107';
-                indicator.style.background = '#fff3cd';
-            } else {
-                indicator.innerHTML = `
-                    <h3>🎯 一般練習模式</h3>
-                    <p>從所有已輸入的例句中隨機出題</p>
-                `;
-                indicator.style.borderLeftColor = '#667eea';
-                indicator.style.background = '#e7f3ff';
-            }
-            
-            startQuiz();
+        function closeCategoryModal() {
+            document.getElementById('categoryModal').classList.remove('active');
+            currentCategory = null;
+            document.getElementById('newWord').value = '';
+            document.getElementById('newTranslation').value = '';
+            document.getElementById('newImage').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            currentImagePreview = null;
         }
 
-        // 重置成績
-        function resetStats() {
-            if (!confirm('確定要清除所有成績記錄嗎？\n（例句不會被刪除，只會清除答題統計和錯題記錄）')) {
+        // Vocab management
+        function addVocabToCategory() {
+            if (!currentCategory) return;
+
+            const word = document.getElementById('newWord').value.trim();
+            const translation = document.getElementById('newTranslation').value.trim();
+
+            if (!word || !translation) {
+                alert('請填寫英文單字和中文翻譯');
                 return;
             }
-            
-            data.stats = {
-                correct: 0,
-                incorrect: 0,
-                wrongQuestions: []
-            };
-            
+
+            currentCategory.vocabs.push({
+                id: Date.now(),
+                word: word,
+                translation: translation,
+                image: currentImagePreview
+            });
+
             saveData();
+            renderVocabList();
+            renderCategories();
             updateStats();
-            updateWrongList();
+
+            // Clear form
+            document.getElementById('newWord').value = '';
+            document.getElementById('newTranslation').value = '';
+            document.getElementById('newImage').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            currentImagePreview = null;
+        }
+
+        function renderVocabList() {
+            const container = document.getElementById('vocabListContainer');
             
-            alert('✅ 成績已清除！可以重新開始練習了');
-            
-            // 如果在錯題模式，切回一般模式
-            if (isWrongQuestionMode) {
-                isWrongQuestionMode = false;
-                const indicator = document.getElementById('mode-indicator');
-                indicator.innerHTML = `
-                    <h3>🎯 一般練習模式</h3>
-                    <p>從所有已輸入的例句中隨機出題</p>
+            if (!currentCategory || currentCategory.vocabs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <p>這個類別還沒有單字</p>
+                    </div>
                 `;
-                indicator.style.borderLeftColor = '#667eea';
-                indicator.style.background = '#e7f3ff';
+                return;
+            }
+
+            container.innerHTML = currentCategory.vocabs.map((vocab, index) => `
+                <div class="vocab-item">
+                    ${vocab.image ? 
+                        `<img src="${vocab.image}" class="vocab-image" alt="${vocab.word}">` :
+                        `<div class="vocab-image-placeholder">📷</div>`
+                    }
+                    <div class="vocab-info">
+                        <div class="vocab-word">${vocab.word}</div>
+                        <div class="vocab-translation">${vocab.translation}</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-outline" onclick="editVocab(${index})">編輯</button>
+                        <button class="btn btn-danger" onclick="deleteVocab(${index})">刪除</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editVocab(index) {
+            currentEditIndex = index;
+            const vocab = currentCategory.vocabs[index];
+            
+            document.getElementById('editWord').value = vocab.word;
+            document.getElementById('editTranslation').value = vocab.translation;
+            
+            if (vocab.image) {
+                document.getElementById('editImagePreview').innerHTML = 
+                    `<img src="${vocab.image}" style="max-width: 200px; border-radius: 8px; margin-top: 12px;">`;
             }
             
-            startQuiz();
+            document.getElementById('editModal').classList.add('active');
         }
 
-        // 初始化批量輸入表格
-        function initBatchTable() {
-            const tbody = document.getElementById('batch-table-body');
-            if (tbody.children.length === 0) {
-                // 預設新增3行
-                for (let i = 0; i < 3; i++) {
-                    addBatchRow();
-                }
+        function saveEdit() {
+            if (currentEditIndex === null || !currentCategory) return;
+
+            const word = document.getElementById('editWord').value.trim();
+            const translation = document.getElementById('editTranslation').value.trim();
+
+            if (!word || !translation) {
+                alert('請填寫英文單字和中文翻譯');
+                return;
+            }
+
+            currentCategory.vocabs[currentEditIndex].word = word;
+            currentCategory.vocabs[currentEditIndex].translation = translation;
+            
+            const newImage = document.getElementById('editImage').files[0];
+            if (newImage) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentCategory.vocabs[currentEditIndex].image = e.target.result;
+                    saveData();
+                    renderVocabList();
+                    closeEditModal();
+                };
+                reader.readAsDataURL(newImage);
+            } else {
+                saveData();
+                renderVocabList();
+                closeEditModal();
             }
         }
 
-        // 新增批量輸入行
-        function addBatchRow() {
-            const tbody = document.getElementById('batch-table-body');
-            const rowId = Date.now() + Math.random();
-            
-            const row = document.createElement('tr');
-            row.id = `batch-row-${rowId}`;
-            row.innerHTML = `
-                <td data-label="例句">
-                    <input type="text" class="batch-sentence" placeholder="例如：I live ___ Tokyo">
-                </td>
-                <td data-label="解釋">
-                    <textarea class="batch-explanation" placeholder="解釋這個介詞的用法..."></textarea>
-                </td>
-                <td data-label="操作" style="text-align: center;">
-                    <button class="remove-row" onclick="removeBatchRow('${rowId}')">❌ 刪除</button>
-                </td>
-            `;
-            
-            tbody.appendChild(row);
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            currentEditIndex = null;
+            document.getElementById('editImagePreview').innerHTML = '';
         }
 
-        // 移除批量輸入行
-        function removeBatchRow(rowId) {
-            const row = document.getElementById(`batch-row-${rowId}`);
-            if (row) {
-                row.remove();
+        function deleteVocab(index) {
+            if (!confirm('確定要刪除這個單字嗎？')) return;
+            
+            currentCategory.vocabs.splice(index, 1);
+            saveData();
+            renderVocabList();
+            renderCategories();
+            updateStats();
+        }
+
+        // Image preview
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentImagePreview = e.target.result;
+                    document.getElementById('imagePreview').innerHTML = 
+                        `<img src="${e.target.result}" style="max-width: 200px; border-radius: 8px;">`;
+                };
+                reader.readAsDataURL(file);
             }
         }
 
-        // 清空批量輸入表格
-        function clearBatchTable() {
-            if (!confirm('確定要清空整個表格嗎？')) return;
-            
-            document.getElementById('batch-table-body').innerHTML = '';
-            initBatchTable();
+        function previewEditImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('editImagePreview').innerHTML = 
+                        `<img src="${e.target.result}" style="max-width: 200px; border-radius: 8px;">`;
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
-        // 儲存批量輸入的例句
-        function saveBatchExamples() {
-            const prep = document.getElementById('batch-prep-category').value;
-            const tbody = document.getElementById('batch-table-body');
-            const rows = tbody.querySelectorAll('tr');
+        // Practice
+        function updatePracticeCategoryList() {
+            const select = document.getElementById('practiceCategory');
+            select.innerHTML = '<option value="">-- 選擇類別 --</option>' +
+                categories.map(cat => `<option value="${cat.id}">${cat.name} (${cat.vocabs.length})</option>`).join('');
+        }
+
+        function startPractice() {
+            const categoryId = parseInt(document.getElementById('practiceCategory').value);
+            if (!categoryId) {
+                document.getElementById('practiceArea').style.display = 'none';
+                return;
+            }
+
+            currentPracticeCategory = categories.find(cat => cat.id === categoryId);
+            if (!currentPracticeCategory || currentPracticeCategory.vocabs.length === 0) {
+                alert('這個類別沒有單字！');
+                return;
+            }
+
+            currentPracticeWords = [...currentPracticeCategory.vocabs];
+            shuffleArray(currentPracticeWords);
+            currentPracticeIndex = 0;
+
+            document.getElementById('practiceArea').style.display = 'block';
+            showPracticeWord();
+        }
+
+        function showPracticeWord() {
+            if (currentPracticeIndex >= currentPracticeWords.length) {
+                currentPracticeIndex = 0;
+                shuffleArray(currentPracticeWords);
+            }
+
+            const vocab = currentPracticeWords[currentPracticeIndex];
+            const mode = document.getElementById('practiceMode').value;
+            const wordElement = document.getElementById('practiceWord');
+            const translationElement = document.getElementById('practiceTranslation');
+            const regenerateBtn = document.getElementById('regenerateBtn');
             
-            let validCount = 0;
-            let errorCount = 0;
-            const errors = [];
+            // Show image if available
+            const imageContainer = document.getElementById('practiceImageContainer');
+            if (vocab.image) {
+                document.getElementById('practiceImage').src = vocab.image;
+                imageContainer.style.display = 'block';
+            } else {
+                imageContainer.style.display = 'none';
+            }
 
-            rows.forEach((row, index) => {
-                const sentence = row.querySelector('.batch-sentence').value.trim();
-                const explanation = row.querySelector('.batch-explanation').value.trim();
-
-                // 跳過空行
-                if (!sentence && !explanation) {
-                    return;
+            if (mode === 'translation') {
+                // Translation mode: show Chinese, ask for English
+                translationElement.textContent = vocab.translation;
+                translationElement.style.display = 'block';
+                wordElement.style.display = 'none';
+                regenerateBtn.style.display = 'none';
+                document.getElementById('practiceInput').placeholder = '輸入英文單字...';
+            } else {
+                // Hide letters mode: show English with hidden letters
+                translationElement.style.display = 'none';
+                wordElement.style.display = 'block';
+                regenerateBtn.style.display = 'inline-flex';
+                document.getElementById('practiceInput').placeholder = '輸入完整單字...';
+                
+                const word = vocab.word.toUpperCase();
+                const hideCount = Math.ceil(word.length * 0.4); // Hide 40% of letters
+                const hiddenIndices = new Set();
+                
+                while (hiddenIndices.size < hideCount) {
+                    hiddenIndices.add(Math.floor(Math.random() * word.length));
                 }
 
-                // 檢查格式
-                if (!sentence || !explanation) {
-                    errors.push(`第 ${index + 1} 行：請填寫完整的例句和解釋`);
-                    errorCount++;
-                    return;
+                wordElement.innerHTML = Array.from(word).map((letter, i) => 
+                    `<span class="letter ${hiddenIndices.has(i) ? 'hidden' : ''}">${letter}</span>`
+                ).join('');
+            }
+
+            document.getElementById('practiceInput').value = '';
+            document.getElementById('practiceFeedback').style.display = 'none';
+        }
+
+        function regeneratePattern() {
+            const mode = document.getElementById('practiceMode').value;
+            if (mode === 'hideLetters') {
+                showPracticeWord();
+            }
+        }
+
+        function checkAnswer(event) {
+            if (event.key !== 'Enter') return;
+
+            const vocab = currentPracticeWords[currentPracticeIndex];
+            const userAnswer = document.getElementById('practiceInput').value.trim().toLowerCase();
+            const correctAnswer = vocab.word.toLowerCase();
+
+            const feedback = document.getElementById('practiceFeedback');
+            feedback.style.display = 'block';
+
+            if (userAnswer === correctAnswer) {
+                feedback.className = 'practice-feedback correct';
+                feedback.textContent = `✅ 正確！${vocab.word} = ${vocab.translation}`;
+                practiceStats.totalPracticed++;
+                saveStats();
+                setTimeout(nextWord, 1500);
+            } else {
+                feedback.className = 'practice-feedback incorrect';
+                feedback.textContent = `❌ 再試試看！`;
+            }
+        }
+
+        function showAnswer() {
+            const vocab = currentPracticeWords[currentPracticeIndex];
+            const mode = document.getElementById('practiceMode').value;
+            
+            if (mode === 'translation') {
+                // In translation mode, show the English word
+                document.getElementById('practiceWord').innerHTML = vocab.word.toUpperCase();
+                document.getElementById('practiceWord').style.display = 'block';
+            } else {
+                // In hide letters mode, reveal all letters
+                document.getElementById('practiceWord').innerHTML = vocab.word.toUpperCase();
+            }
+            
+            document.getElementById('practiceInput').value = vocab.word;
+            
+            const feedback = document.getElementById('practiceFeedback');
+            feedback.style.display = 'block';
+            feedback.className = 'practice-feedback';
+            feedback.style.background = '#FFF3CD';
+            feedback.style.color = '#856404';
+            feedback.style.border = '2px solid #FFEAA7';
+            feedback.textContent = `💡 答案：${vocab.word} = ${vocab.translation}`;
+        }
+
+        function nextWord() {
+            currentPracticeIndex++;
+            showPracticeWord();
+        }
+
+        // Import
+        function updateImportCategoryList() {
+            const select = document.getElementById('importCategory');
+            select.innerHTML = '<option value="">-- 選擇類別 --</option>' +
+                categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+        }
+
+        function importVocab() {
+            const categoryId = parseInt(document.getElementById('importCategory').value);
+            const text = document.getElementById('importText').value.trim();
+
+            if (!categoryId) {
+                alert('請選擇類別');
+                return;
+            }
+
+            if (!text) {
+                alert('請輸入要匯入的單字');
+                return;
+            }
+
+            const category = categories.find(cat => cat.id === categoryId);
+            const lines = text.split('\n');
+            let imported = 0;
+
+            lines.forEach(line => {
+                const parts = line.split(',').map(s => s.trim());
+                if (parts.length >= 2 && parts[0] && parts[1]) {
+                    category.vocabs.push({
+                        id: Date.now() + imported,
+                        word: parts[0],
+                        translation: parts[1],
+                        image: null
+                    });
+                    imported++;
                 }
-
-                if (!sentence.includes('___')) {
-                    errors.push(`第 ${index + 1} 行：例句中請用 ___ 表示介詞位置`);
-                    errorCount++;
-                    return;
-                }
-
-                // 儲存例句
-                data.examples[prep].push({
-                    sentence: sentence,
-                    explanation: explanation,
-                    preposition: prep,
-                    id: Date.now() + Math.random()
-                });
-
-                validCount++;
             });
-
-            if (errorCount > 0) {
-                alert('❌ 發現錯誤：\n\n' + errors.join('\n') + '\n\n請修正後再試');
-                return;
-            }
-
-            if (validCount === 0) {
-                alert('⚠️ 沒有可儲存的例句（所有行都是空的）');
-                return;
-            }
 
             saveData();
-            
-            // 清空表格
-            document.getElementById('batch-table-body').innerHTML = '';
-            initBatchTable();
-            
-            alert(`✅ 成功儲存 ${validCount} 個 "${prep}" 的例句！\n\n可以繼續選擇其他介詞輸入更多例句`);
+            renderCategories();
+            updateStats();
+            document.getElementById('importText').value = '';
+            alert(`成功匯入 ${imported} 個單字！`);
         }
 
-        // 執行搜尋
-        function performSearch() {
-            const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
-            const prepFilter = document.getElementById('search-prep-filter').value;
-            const resultsContainer = document.getElementById('search-results-container');
-            const countElement = document.getElementById('search-count');
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-            let allExamples = [];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('importText').value = e.target.result;
+            };
+            reader.readAsText(file);
+        }
 
-            // 收集所有例句
-            for (let prep in data.examples) {
-                if (prepFilter === 'all' || prepFilter === prep) {
-                    allExamples = allExamples.concat(data.examples[prep].map(ex => ({
-                        ...ex,
-                        preposition: prep
-                    })));
-                }
-            }
+        // Stats
+        function updateStats() {
+            document.getElementById('totalCategories').textContent = categories.length;
+            document.getElementById('totalVocab').textContent = 
+                categories.reduce((sum, cat) => sum + cat.vocabs.length, 0);
+            document.getElementById('totalPracticed').textContent = practiceStats.totalPracticed;
+        }
 
-            // 如果沒有搜尋詞，顯示所有（篩選後的）例句
-            if (!searchTerm) {
-                if (allExamples.length === 0) {
-                    resultsContainer.innerHTML = `
-                        <div class="no-results">
-                            <p style="font-size: 1.2em;">📝</p>
-                            <p>還沒有例句</p>
-                        </div>
-                    `;
-                    countElement.textContent = '共 0 個結果';
-                    return;
-                }
-
-                displaySearchResults(allExamples, '');
-                countElement.textContent = `共 ${allExamples.length} 個結果`;
-                return;
-            }
-
-            // 搜尋匹配的例句
-            const results = allExamples.filter(ex => {
-                const sentence = ex.sentence.toLowerCase();
-                const explanation = ex.explanation.toLowerCase();
-                return sentence.includes(searchTerm) || explanation.includes(searchTerm);
-            });
-
-            if (results.length === 0) {
-                resultsContainer.innerHTML = `
-                    <div class="no-results">
-                        <p style="font-size: 1.2em;">😔</p>
-                        <p>找不到符合的例句</p>
-                        <p style="font-size: 0.9em; color: #999;">試試其他關鍵字或調整篩選條件</p>
-                    </div>
-                `;
-                countElement.textContent = '共 0 個結果';
-            } else {
-                displaySearchResults(results, searchTerm);
-                countElement.textContent = `共 ${results.length} 個結果`;
+        // Utilities
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
         }
 
-        // 顯示搜尋結果
-        function displaySearchResults(results, searchTerm) {
-            const container = document.getElementById('search-results-container');
-            
-            container.innerHTML = results.map(ex => {
-                // 高亮關鍵字
-                const highlightText = (text, term) => {
-                    if (!term) return text;
-                    const regex = new RegExp(`(${term})`, 'gi');
-                    return text.replace(regex, '<span class="highlight">$1</span>');
-                };
-
-                const highlightedSentence = highlightText(ex.sentence, searchTerm);
-                const highlightedExplanation = highlightText(ex.explanation, searchTerm);
-                const displaySentence = highlightedSentence.replace('___', `<span style="color: #667eea; font-weight: 700;">${ex.preposition}</span>`);
-
-                return `
-                    <div class="search-item">
-                        <div class="prep-badge">${ex.preposition.toUpperCase()}</div>
-                        <p><strong>例句：</strong>${displaySentence}</p>
-                        <p><strong>解釋：</strong>${highlightedExplanation}</p>
-                        <div class="search-item-actions">
-                            <button class="btn-view" onclick="viewInInputMode('${ex.preposition}', ${ex.id})">📝 前往編輯</button>
-                            <button class="btn-view" onclick="practiceThisSearchResult(${ex.id}, '${ex.preposition}')">🎯 練習這題</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+        function saveData() {
+            localStorage.setItem('vocabCategories', JSON.stringify(categories));
+            updateStats();
         }
 
-        // 在輸入模式中查看特定例句
-        function viewInInputMode(prep, exampleId) {
-            // 切換到輸入模式
-            document.getElementById('prep-category').value = prep;
-            switchMode('input');
-            
-            // 滾動到該例句
-            setTimeout(() => {
-                const exampleItems = document.querySelectorAll('.example-item');
-                exampleItems.forEach(item => {
-                    if (item.querySelector('h4').textContent === prep.toUpperCase()) {
-                        // 找到對應的例句，可以加入高亮效果
-                        item.style.backgroundColor = '#fff3cd';
-                        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        
-                        // 3秒後移除高亮
-                        setTimeout(() => {
-                            item.style.backgroundColor = '';
-                        }, 3000);
-                    }
-                });
-            }, 100);
+        function saveStats() {
+            localStorage.setItem('practiceStats', JSON.stringify(practiceStats));
+            updateStats();
         }
 
-        // 從搜尋結果練習特定題目
-        function practiceThisSearchResult(exampleId, prep) {
-            // 找到該例句
-            const example = data.examples[prep].find(ex => ex.id === exampleId);
-            if (!example) return;
-
-            // 切換到練習模式
-            switchMode('practice');
-
-            // 設置當前題目
-            setTimeout(() => {
-                currentQuestion = example;
-                selectedAnswer = null;
-
-                // 生成選項
-                let options = [example.preposition];
-                let otherPreps = allPrepositions.filter(p => p !== example.preposition);
-                
-                while (options.length < Math.min(5, allPrepositions.length)) {
-                    const randomPrep = otherPreps[Math.floor(Math.random() * otherPreps.length)];
-                    if (!options.includes(randomPrep)) {
-                        options.push(randomPrep);
-                    }
-                }
-                options.sort(() => Math.random() - 0.5);
-
-                document.getElementById('quiz-container').innerHTML = `
-                    <div class="quiz-card">
-                        <div style="background: #e7f3ff; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                            <strong>🔍 從搜尋結果練習</strong>
-                        </div>
-                        <div class="quiz-sentence">
-                            ${example.sentence.replace('___', '<span class="blank">?</span>')}
-                        </div>
-                        <div class="preposition-buttons">
-                            ${options.map(opt => `
-                                <button class="prep-btn" onclick="selectAnswer('${opt}')">${opt}</button>
-                            `).join('')}
-                        </div>
-                        <button class="btn btn-success" onclick="checkAnswer()" style="margin-top: 20px;">✓ 確認答案</button>
-                        <div id="feedback"></div>
-                    </div>
-                `;
-
-                // 滾動到題目區域
-                document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-        }
-
-        // 初始化
-        loadData();
-        updateExamplesList();
+        // Initialize app
+        init();
     </script>
 </body>
 </html>
